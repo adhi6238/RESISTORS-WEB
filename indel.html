@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resistors Group</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+        header {
+            background-color: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header img {
+            width: 100px;
+            height: auto;
+            border-radius: 50%;
+        }
+        header input[type="file"] {
+            margin-top: 10px;
+        }
+        section {
+            padding: 20px;
+        }
+        .members {
+            list-style-type: none;
+            padding: 0;
+        }
+        .members li {
+            padding: 5px 0;
+        }
+        .comments {
+            margin-top: 20px;
+        }
+        .comments textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .comments button {
+            background-color: #0078d7;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .comments button:hover {
+            background-color: #005bb5;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .editable {
+            border: 1px dashed #ccc;
+            padding: 10px;
+            background-color: #fff;
+        }
+        .toggle-btn {
+            background-color: #0078d7;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .toggle-btn:hover {
+            background-color: #005bb5;
+        }
+        .media-section {
+            margin-top: 30px;
+        }
+        .media-section input[type="file"] {
+            display: block;
+            margin: 10px 0;
+        }
+        .media-section .media-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .media-container img, .media-container video {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img id="logo" src="Screenshot_20250113_195527.jpg" alt="Group Logo">
+        <h1>Welcome to Resistors</h1>
+        <p><em>Resist Negativity</em></p>
+        <input type="file" accept="image/*" onchange="changeLogo(event)">
+        <button class="toggle-btn" onclick="toggleBackground()">Toggle Background</button>
+    </header>
+    
+    <section>
+        <h2>About Us</h2>
+        <div class="editable" contenteditable="true" id="about-us">
+            This group is made for the Mpowerment program. We can share our experiences through this web page.
+        </div>
+    </section>
+
+    <section>
+        <h2>Our Members</h2>
+        <ul class="members editable" contenteditable="true" id="members">
+            <li><strong>Delna</strong> - Captain</li>
+            <li><strong>Adwaith K</strong> - Vice Captain</li>
+            <li>Aparna</li>
+            <li>Avanthika</li>
+            <li>Ashwin</li>
+            <li>Albin</li>
+            <li>Arun</li>
+            <li>Adithian</li>
+        </ul>
+    </section>
+
+    <section class="comments">
+        <h2>Leave a Comment</h2>
+        <textarea placeholder="Type your comment here..."></textarea>
+        <button>Submit</button>
+    </section>
+
+    <section>
+        <h2>Blog Posts</h2>
+        <div id="blog-posts">
+            <p>No posts yet. Add one below!</p>
+        </div>
+        <textarea id="new-post" placeholder="Write a new post..."></textarea>
+        <button onclick="addPost()">Add Post</button>
+    </section>
+
+    <!-- New Media Section -->
+    <section class="media-section">
+        <h2>Media Section</h2>
+        <input type="file" accept="image/*" onchange="uploadImage(event)">
+        <input type="file" accept="video/*" onchange="uploadVideo(event)">
+        <div class="media-container" id="media-container"></div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Resistors Group. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Save content to LocalStorage
+        function saveContent() {
+            localStorage.setItem('aboutUs', document.getElementById('about-us').innerHTML);
+            localStorage.setItem('members', document.getElementById('members').innerHTML);
+            localStorage.setItem('blogPosts', document.getElementById('blog-posts').innerHTML);
+        }
+
+        // Load content from LocalStorage
+        function loadContent() {
+            if (localStorage.getItem('aboutUs')) {
+                document.getElementById('about-us').innerHTML = localStorage.getItem('aboutUs');
+            }
+            if (localStorage.getItem('members')) {
+                document.getElementById('members').innerHTML = localStorage.getItem('members');
+            }
+            if (localStorage.getItem('blogPosts')) {
+                document.getElementById('blog-posts').innerHTML = localStorage.getItem('blogPosts');
+            }
+        }
+
+        // Add a new blog post
+        function addPost() {
+            const newPost = document.getElementById('new-post').value;
+            if (newPost.trim() !== '') {
+                const postDiv = document.createElement('div');
+                postDiv.textContent = newPost;
+                postDiv.className = 'editable';
+                postDiv.contentEditable = true;
+                document.getElementById('blog-posts').appendChild(postDiv);
+                document.getElementById('new-post').value = '';
+                saveContent();
+            }
+        }
+
+        // Change the logo when a new image is uploaded
+        function changeLogo(event) {
+            const logo = document.getElementById('logo');
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                logo.src = e.target.result;
+            };
+            
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Toggle the background color between black and white
+        function toggleBackground() {
+            const body = document.body;
+            const currentColor = body.style.backgroundColor;
+            if (currentColor === 'black' || currentColor === '') {
+                body.style.backgroundColor = 'white';
+                body.style.color = 'black';
+            } else {
+                body.style.backgroundColor = 'black';
+                body.style.color = 'white';
+            }
+        }
+
+        // Upload and display an image
+        function uploadImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                document.getElementById('media-container').appendChild(img);
+            };
+            
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Upload and display a video
+        function uploadVideo(event) {
+            const file = event.target.files[0];
+            const video = document.createElement('video');
+            video.controls = true;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                video.src = e.target.result;
+                document.getElementById('media-container').appendChild(video);
+            };
+            
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Auto-save content when editing
+        document.addEventListener('input', saveContent);
+
+        // Load content on page load
+        window.onload = loadContent;
+    </script>
+</body>
+</html>
+
+
+</html>
+           
